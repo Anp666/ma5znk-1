@@ -1,0 +1,7 @@
+{
+  "name": "مخزنك | Makhzanak",
+  "description": "Modern cloud-based accounting and inventory management platform with AI assistance.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

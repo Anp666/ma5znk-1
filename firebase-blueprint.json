@@ -1,0 +1,144 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account information and permissions",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "accountant", "cashier", "manager"] },
+        "permissions": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Inventory item",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "sku": { "type": "string" },
+        "barcode": { "type": "string" },
+        "purchasePrice": { "type": "number" },
+        "sellingPrice": { "type": "number" },
+        "quantity": { "type": "number" },
+        "minStock": { "type": "number" },
+        "categoryId": { "type": "string" },
+        "supplierId": { "type": "string" },
+        "unit": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["name", "sku", "quantity"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product category",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "Account": {
+      "title": "Accounting Account",
+      "description": "An account in the chart of accounts",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["Asset", "Liability", "Equity", "Revenue", "Expense"] },
+        "parentId": { "type": "string" },
+        "balance": { "type": "number" },
+        "isSystem": { "type": "boolean" }
+      },
+      "required": ["code", "name", "type"]
+    },
+    "Transaction": {
+      "title": "Accounting Transaction",
+      "description": "A single entry in the ledger",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date-time" },
+        "accountId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["debit", "credit"] },
+        "description": { "type": "string" },
+        "invoiceId": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["date", "accountId", "amount", "type"]
+    },
+    "Invoice": {
+      "title": "Invoice",
+      "description": "Sales or Purchase invoice",
+      "type": "object",
+      "properties": {
+        "number": { "type": "string" },
+        "type": { "type": "string", "enum": ["sales", "purchase", "return"] },
+        "date": { "type": "string", "format": "date-time" },
+        "customerId": { "type": "string" },
+        "supplierId": { "type": "string" },
+        "items": { "type": "array" },
+        "subtotal": { "type": "number" },
+        "tax": { "type": "number" },
+        "total": { "type": "number" },
+        "status": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["number", "type", "date", "total"]
+    },
+    "Customer": {
+      "title": "Customer",
+      "description": "Client information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "balance": { "type": "number" }
+      },
+      "required": ["name"]
+    },
+    "Supplier": {
+      "title": "Supplier",
+      "description": "Vendor information",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "balance": { "type": "number" }
+      },
+      "required": ["name"]
+    },
+    "Log": {
+      "title": "Action Log",
+      "description": "User action tracking log",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "action": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "details": { "type": "object" }
+      },
+      "required": ["userId", "action", "timestamp"]
+    }
+  },
+  "firestore": {
+    "users": { "schema": "User", "description": "User profiles" },
+    "products": { "schema": "Product", "description": "Inventory products" },
+    "categories": { "schema": "Category", "description": "Product categories" },
+    "accounts": { "schema": "Account", "description": "Chart of accounts" },
+    "transactions": { "schema": "Transaction", "description": "Ledger entries" },
+    "invoices": { "schema": "Invoice", "description": "Sales and purchase invoices" },
+    "customers": { "schema": "Customer", "description": "Client records" },
+    "suppliers": { "schema": "Supplier", "description": "Vendor records" },
+    "logs": { "schema": "Log", "description": "Action tracking logs" }
+  }
+}

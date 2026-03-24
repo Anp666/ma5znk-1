@@ -1,0 +1,74 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    function isAdmin() {
+      return isAuthenticated() && 
+        (request.auth.token.email == "abdelrhmannabel66@gmail.com" && request.auth.token.email_verified == true ||
+         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
+    }
+    function hasRole(role) {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow get: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAdmin();
+      allow create: if request.auth != null && request.auth.uid == userId && (request.resource.data.role == 'client' || isAdmin());
+      allow update: if isAuthenticated() && (request.auth.uid == userId && request.resource.data.role == resource.data.role || isAdmin());
+    }
+
+    // Products & Categories
+    match /products/{productId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && (isAdmin() || hasRole('manager') || hasRole('accountant'));
+    }
+    match /categories/{categoryId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && (isAdmin() || hasRole('manager'));
+    }
+
+    // Accounting & Invoices
+    match /accounts/{accountId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && (isAdmin() || hasRole('accountant'));
+    }
+    match /transactions/{transactionId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+    match /invoices/{invoiceId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin() || hasRole('manager');
+    }
+
+    // Customers & Suppliers
+    match /customers/{customerId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+    match /suppliers/{supplierId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    // Logs / Action Tracking
+    match /logs/{logId} {
+      allow read: if isAuthenticated() && (isAdmin() || hasRole('manager') || hasRole('accountant'));
+      allow create: if isAuthenticated();
+      allow update, delete: if false;
+    }
+  }
+}

@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Arabic:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    @apply antialiased text-zinc-900 dark:text-zinc-100 bg-zinc-50 dark:bg-zinc-950;
+  }
+}
+
+@layer components {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-zinc-200 dark:bg-zinc-800 rounded-full hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors;
+  }
+
+  .glass-card {
+    @apply bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-white/20 dark:border-zinc-800/50 shadow-xl;
+  }
+
+  .ios-modal {
+    @apply bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border border-white/20 dark:border-zinc-800/50 shadow-2xl rounded-[2rem];
+  }
+
+  .ios-button {
+    @apply h-12 px-6 rounded-xl font-semibold transition-all active:scale-[0.98] flex items-center justify-center gap-2;
+  }
+
+  /* Responsive Table Utilities */
+  .responsive-table {
+    @apply w-full text-left border-collapse;
+  }
+
+  .responsive-table thead {
+    @apply hidden md:table-header-group;
+  }
+
+  .responsive-table tbody tr {
+    @apply flex flex-col md:table-row bg-white dark:bg-zinc-900 md:bg-transparent border border-zinc-200 dark:border-zinc-800 md:border-none rounded-2xl mb-4 md:mb-0 p-4 md:p-0 shadow-sm md:shadow-none;
+  }
+
+  .responsive-table td {
+    @apply flex justify-between md:table-cell py-2 md:py-6 px-0 md:px-10 border-b border-zinc-100 dark:border-zinc-800 last:border-none md:border-none;
+  }
+
+  .responsive-table td::before {
+    content: attr(data-label);
+    @apply md:hidden font-bold text-zinc-400 text-[10px] uppercase tracking-wider;
+  }
+}
+
+/* RTL Adjustments */
+[dir="rtl"] .group-hover\:translate-x-1:hover {
+  transform: translateX(-0.25rem);
+}
+
+:root {
+  --emerald-600: #059669;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-200 dark:bg-zinc-800 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-300 dark:bg-zinc-700;
+}
+
+/* Glassmorphism */
+.glass {
+  @apply bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl border border-white/20 dark:border-zinc-800/50;
+}
+
+/* RTL Support for Lucide Icons */
+[dir="rtl"] .lucide-chevron-right {
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .lucide-arrow-right {
+  transform: rotate(180deg);
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #printable-invoice, #printable-invoice * {
+    visibility: visible;
+  }
+  #printable-invoice {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
